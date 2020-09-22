@@ -1,0 +1,62 @@
+{% extends 'base.html'%}
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+
+{% block content %}
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-size: 18px;
+        background-color: #fdfdfd;
+    }
+
+    .head_text {
+        color: white;
+    }
+
+    .card {
+        box-shadow: 0 16px 48px #E3E7EB;
+    }
+</style>
+
+<header class="masthead">
+    <div class="overlay"></div>
+    <div class="container bg bg-info">
+        <div class="row">
+            <div class=" col-md-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h3 class=" site-heading my-4 mt-3 text-white"> Welcome to Bookworms Blog </h3>
+                    <p class="text-light">This Blog is the disccusion platform for the all the readers around the world.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+            {% for blog in blogs %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title text-success">{{ blog.blog_title }}</h2>
+                    <p class="card-text text-muted h6">{{ blog.author }} | {{ blog.created_on}} </p>
+                    <p class="card-text">{{blog.content|slice:":200" }}</p>
+                    <a href="{% url 'blog:blog_detail' slug=blog.slug %}" class="btn btn-primary">Read More &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
