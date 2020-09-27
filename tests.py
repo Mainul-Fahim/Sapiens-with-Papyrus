@@ -1,3 +1,4 @@
+
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -99,4 +100,4 @@ class BookTest(TestCase):
             self.assertEqual(request.status_code, 200)
             self.assertContains(request, 'Out of Stock !')
             self.assertNotContains(request, 'Buy Now') # buy now option is no longer present
-            
+  

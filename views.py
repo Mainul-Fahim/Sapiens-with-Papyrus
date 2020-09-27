@@ -1,25 +1,11 @@
-from django.shortcuts import render 
-from django.views.generic.edit import CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Book, Order
+
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.http import JsonResponse
-import json
+from django.contrib.auth.forms import UserCreationForm
+from django.views import generic
 
 
-
-class BookCheckoutView(LoginRequiredMixin, DetailView):
-    model = Book
-    template_name = 'checkout.html'
-    login_url     = 'login'
-
-
-def paymentComplete(request):
-	body = json.loads(request.body)
-	print('BODY:', body)
-	product = Book.objects.get(id=body['productId'])
-	Order.objects.create(
-		product=product
-	)
-	return JsonResponse('Payment completed!', safe=False)
-
+class SignUpView(generic.CreateView):
+    form_class    = UserCreationForm
+    success_url   = reverse_lazy('login')
+    template_name = 'signup.html'
