@@ -1,24 +1,56 @@
-
 from django.db import models
-from django.urls import reverse
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.utils import timezone
 
-class Book(models.Model):
-    title  = models.CharField(max_length = 200)
-    author = models.CharField(max_length = 200)
-    description = models.CharField(max_length = 500, default=None)
-    price = models.FloatField(null=True, blank=True)
-    image_url = models.CharField(max_length = 2083, default=False)
-    follow_author = models.CharField(max_length=2083, blank=True)  
-    book_available = models.BooleanField(default=False)
+
+
+STATUS = (
+    (0,"Draft"),
+    (1,"Publish")
+)
+
+class BlogPost(models.Model):
+    author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_post_author')
+    blog_title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    updated_on = models.DateTimeField(auto_now= True)
+    content = models.TextField(verbose_name="What is on your mind?")
+    
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on=models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(choices=STATUS, default=0)
+
+    class Meta:
+        ordering = ['-created_on']
 
     def __str__(self):
-        return self.title
+        return self.blog_title
 
 
-class Order(models.Model):
-	product = models.ForeignKey(Book, max_length=200, null=True, blank=True, on_delete = models.SET_NULL)
-	created =  models.DateTimeField(auto_now_add=True) 
 
-	def __str__(self):
-		return self.product.title
-    
+class BlogComment(models.Model):
+    blog_post=models.ForeignKey(BlogPost,on_delete=models.CASCADE,related_name='blog_post_comment')
+    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='blog_user_comment')
+    blog_comment=models.TextField()
+    blog_comment_date=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering=('-blog_comment_date',)
+
+
+    def __str__(self):
+        return self.blog_comment
+
+
+
+
+class Likes(models.Model):
+    blog=models.ForeignKey(BlogPost,on_delete=models.CASCADE,related_name='liked_blog')
+    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='liked_user')
+
+
+
+    def __str__(self):
+        return self.user+ " likes " + self.blog
